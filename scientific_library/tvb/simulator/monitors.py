@@ -74,7 +74,7 @@ class Monitor(HasTraits):
     """
 
     period = Float(
-        label="Sampling period (ms)",  # order = 10
+        label="Sampling period (ms)",
         default=0.9765625,  # ms. 0.9765625 => 1024Hz #ms, 0.5 => 2000Hz
         doc="""Sampling period in milliseconds, must be an integral multiple
         of integration-step size. As a guide: 2048 Hz => 0.48828125 ms ;  
@@ -82,7 +82,7 @@ class Monitor(HasTraits):
 
     variables_of_interest = NArray(
         dtype=int,
-        label="Model variables to watch",  # order=11,
+        label="Model variables to watch",
         doc=("Indices of model's variables of interest (VOI) that this monitor should record. "
              "Note that the indices should start at zero, so that if a model offers VOIs V, W and "
              "V+W, and W is selected, and this monitor should record W, then the correct index is 0."),
@@ -166,13 +166,11 @@ class Raw(Monitor):
     _ui_name = "Raw recording"
 
     period = Float(default=0.0, label="Sampling period is ignored for Raw Monitor")
-    # order = -1
 
     variables_of_interest = NArray(
         dtype=int,
         label="Raw Monitor sees all!!! Resistance is futile...",
         required=False)
-    # order = -1
 
     def config_for_sim(self, simulator):
         if self.period != simulator.integrator.dt:
@@ -233,7 +231,6 @@ class SpatialAverage(Monitor):
         label="Default Mask",
         doc=("Fallback in case spatial mask is none and no surface provided" 
              "to use either connectivity hemispheres or cortical attributes."))
-        # order = -1)
 
     def config_for_sim(self, simulator):
 
@@ -250,14 +247,14 @@ class SpatialAverage(Monitor):
                 conn = simulator.connectivity
                 if self.default_mask == 'cortical':
                     if conn is not None and conn.cortical is not None and conn.cortical.size > 0:
-                        ## Use as spatial-mask cortical/non cortical areas
+                        # Use as spatial-mask cortical/non cortical areas
                         self.spatial_mask = numpy.array([int(c) for c in conn.cortical])
                     else:
                         msg = "Must fill Spatial Mask parameter for non-surface simulations when using SpatioTemporal monitor!"
                         raise Exception(msg)
                 if self.default_mask == 'hemispheres':
                     if conn is not None and conn.hemispheres is not None and conn.hemispheres.size > 0:
-                        ## Use as spatial-mask left/right hemisphere
+                        # Use as spatial-mask left/right hemisphere
                         self.spatial_mask = numpy.array([int(h) for h in conn.hemispheres])
                     else:
                         msg = "Must fill Spatial Mask parameter for non-surface simulations when using SpatioTemporal monitor!"
@@ -271,8 +268,7 @@ class SpatialAverage(Monitor):
         areas = numpy.unique(self.spatial_mask)
         number_of_areas = len(areas)
         if not numpy.all(areas == numpy.arange(number_of_areas)):
-            msg = ("Areas in the spatial_mask must be specified as a "
-                    "contiguous set of indices starting from zero.")
+            msg = "Areas in the spatial_mask must be specified as a contiguous set of indices starting from zero."
             raise Exception(msg)
 
         self.log.debug("spatial_mask")
